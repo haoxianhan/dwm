@@ -4,21 +4,22 @@
 
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
-static const unsigned int snap      = 32;       /* snap pixel */
+static const unsigned int snap      = 20;       /* snap pixel */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
 static const int showsystray        = 1;     /* 0 means no systray */
-static const unsigned int gappih    = 10;       /* horiz inner gap between windows */
-static const unsigned int gappiv    = 10;       /* vert inner gap between windows */
-static const unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
-static const unsigned int gappov    = 10;       /* vert outer gap between windows and screen edge */
-static const int smartgaps          = 1;        /* 1 means no outer gap when there is only one window */
+static const unsigned int gappih    = 8;       /* horiz inner gap between windows */
+static const unsigned int gappiv    = 8;       /* vert inner gap between windows */
+static const unsigned int gappoh    = 8;       /* horiz outer gap between windows and screen edge */
+static const unsigned int gappov    = 8;       /* vert outer gap between windows and screen edge */
+static const int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
 static const int showbar            = 1;        /* 0 means no bar */
-static const int topbar             = 0;        /* 0 means bottom bar */
+static const int topbar             = 1;        /* 0 means bottom bar */
 static const Bool viewontag         = True;     /* Switch view on tag switch */
-static const char *fonts[]          = { "SauceCodePro Nerd Font Mono:size=16" };
-static const char dmenufont[]       = "SauceCodePro Nerd Font Mono:size=16";
+static const char *fonts[]          = { "SauceCodePro Nerd Font Mono:size=13" };
+static const char dmenufont[]       = "SauceCodePro Nerd Font Mono:size=18";
+static const char rofifont[]       = "SauceCodePro Nerd Font Mono 18";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
@@ -41,7 +42,8 @@ static const unsigned int alphas[][3]      = {
 
 /* tagging */
 //static const char *tags[] = { "一", "二", "三", "四", "五", "六", "七", "八", "九" };
-static const char *tags[] = { "\uf120", "\uf7ae", "\uf121", "\uf04b", "\ue62e", "\uf251", "\ue727", "\uf537", "\uf684" };
+// static const char *tags[] = { "\uf120", "\uf7ae", "\uf121", "\uf04b", "\ue62e", "\uf251", "\ue727", "\uf537", "\uf684" };
+static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -50,10 +52,7 @@ static const Rule rules[] = {
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Android Emulator", NULL,       NULL,       0,            1,           -1 },
-	{ "Emulator", NULL,       NULL,       0,            1,           -1 },
-	{ "quemu-system-i386", NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "google-chrome-stable",  NULL,       NULL,       1 << 8,       0,           -1 },
 };
 
 /* layout(s) */
@@ -82,32 +81,28 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "st", NULL };
+static const char *roficmd[] = { "rofi", "-show", "run", "-theme", "sidebar", "-font", rofifont, NULL};
+static const char *termcmd[]  = { "alacritty", NULL };
 static const char *browsercmd[]  = { "google-chrome-stable", NULL };
 
-static const char *upvol[]   = { "/home/david/scripts/vol-up.sh",  NULL };
-static const char *downvol[] = { "/home/david/scripts/vol-down.sh",  NULL };
-static const char *mutevol[] = { "/home/david/scripts/vol-toggle.sh",  NULL };
+static const char *upvol[]   = { "/home/haoxian/scripts/vol-up.sh",  NULL };
+static const char *downvol[] = { "/home/haoxian/scripts/vol-down.sh",  NULL };
+static const char *mutevol[] = { "/home/haoxian/scripts/vol-toggle.sh",  NULL };
 
-static const char *wpcmd[]  = { "/home/david/scripts/wp-change.sh", NULL };
-static const char *sktogglecmd[]  = { "/home/david/scripts/sck-tog.sh", NULL };
+static const char *wpcmd[]  = { "/home/haoxian/scripts/wp-change.sh", NULL };
+static const char *sktogglecmd[]  = { "/home/haoxian/scripts/sck-tog.sh", NULL };
 static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "80x24", NULL };
 
-static const char *setcolemakcmd[]  = { "/home/david/scripts/setxmodmap-colemak.sh", NULL };
-static const char *setqwertycmd[]  = { "/home/david/scripts/setxmodmap-qwerty.sh", NULL };
-
-static const char *suspendcmd[]  = { "/home/david/scripts/suspend.sh", NULL };
+static const char *suspendcmd[]  = { "/home/haoxian/scripts/suspend.sh", NULL };
 
 static const char *screenshotcmd[] = { "flameshot", "gui", NULL };
 
 static Key keys[] = {
 	/* modifier            key                      function        argument */
-	{ MODKEY,              XK_s,                    spawn,          {.v = dmenucmd } },
+	{ MODKEY,              XK_d,                    spawn,          {.v = roficmd } },
 	{ MODKEY,              XK_Return,               spawn,          {.v = termcmd } },
 	{ MODKEY,              XK_c,                    spawn,          {.v = browsercmd } },
-	{ MODKEY|ShiftMask,    XK_w,                    spawn,          {.v = setqwertycmd } },
-	{ MODKEY|ShiftMask,    XK_m,                    spawn,          {.v = setcolemakcmd } },
 	{ MODKEY|ShiftMask,    XK_p,                    spawn,          {.v = suspendcmd } },
 	{ MODKEY|ControlMask,  XK_s,                    spawn,          {.v = sktogglecmd } },
 	{ 0,                   XF86XK_AudioLowerVolume, spawn,          {.v = downvol } },
@@ -118,10 +113,10 @@ static Key keys[] = {
 	{ MODKEY,              XK_bracketright,         spawn,          {.v = upvol   } },
 	{ MODKEY,              XK_b,                    spawn,          {.v = wpcmd } },
 	{ 0,                   XK_Print,                spawn,          {.v = screenshotcmd } },
-	{ MODKEY|ShiftMask,    XK_e,                    rotatestack,    {.i = +1 } },
-	{ MODKEY|ShiftMask,    XK_u,                    rotatestack,    {.i = -1 } },
-	{ MODKEY,              XK_e,                    focusstack,     {.i = +1 } },
-	{ MODKEY,              XK_u,                    focusstack,     {.i = -1 } },
+	{ MODKEY|ShiftMask,    XK_j,                    rotatestack,    {.i = +1 } },
+	{ MODKEY|ShiftMask,    XK_k,                    rotatestack,    {.i = -1 } },
+	{ MODKEY,              XK_j,                    focusstack,     {.i = +1 } },
+	{ MODKEY,              XK_k,                    focusstack,     {.i = -1 } },
 	{ MODKEY,              XK_n,                    viewtoleft,     {0} },
 	{ MODKEY,              XK_i,                    viewtoright,    {0} },
 	{ MODKEY|ShiftMask,    XK_n,                    tagtoleft,      {0} },
@@ -130,8 +125,8 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,    XK_l,                    incnmaster,     {.i = -1 } },
 	{ MODKEY,              XK_h,                    setmfact,       {.f = -0.05} },
 	{ MODKEY,              XK_l,                    setmfact,       {.f = +0.05} },
-	{ MODKEY,              XK_k,                    hidewin,        {0} },
-	{ MODKEY|ShiftMask,    XK_k,                    restorewin,     {0} },
+	// { MODKEY,              XK_k,                    hidewin,        {0} },
+	// { MODKEY|ShiftMask,    XK_k,                    restorewin,     {0} },
 	{ MODKEY,              XK_o,                    hideotherwins,  {0}},
 	{ MODKEY|ShiftMask,    XK_o,                    restoreotherwins, {0}},
 	{ MODKEY|ShiftMask,    XK_Return,               zoom,           {0} },
